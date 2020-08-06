@@ -6,6 +6,10 @@ from d4rl.utils import dataset_utils
 
 from flow.controllers import car_following_models
 
+"""
+Generate controled (Or uncontroled) data from flow simulator
+"""
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -13,14 +17,15 @@ def main():
     #parser.add_argument('--type', action='store_true', help='Noisy actions')
     parser.add_argument('--controller', type=str, default='idm', help='random, idm')
     parser.add_argument('--env_name', type=str, default='flow-ring-v0', help='Maze type. small or default')
-    parser.add_argument('--num_samples', type=int, default=int(1e6), help='Num samples to collect')
+    parser.add_argument('--num_samples', type=int, default=int(1), help='Num samples to collect')
     args = parser.parse_args()
 
     env = gym.make(args.env_name)
+    print('env : ', env)
     env.reset()
     print(env.action_space)
 
-    
+
     if args.controller == 'idm':
         uenv = env.unwrapped
         veh_ids = uenv.k.vehicle.get_rl_ids()
@@ -47,6 +52,9 @@ def main():
     elif args.controller == 'random':
         def get_action(s):
             return env.action_space.sample()
+    elif args.controller == 'follower-stopper':
+        def get_action(s):
+            return env.action_space.sample()
     else:
         raise ValueError("Unknown controller type: %s" % str(args.controller))
 
@@ -60,7 +68,7 @@ def main():
             ret += r
             writer.append_data(s, action, r, done)
             s = ns
-        print(ret)
+        print(ret, '; len=', len(writer), ' / ', args.num_samples)
         #env.render()
     fname = '%s-%s.hdf5' % (args.env_name, args.controller)
     writer.write_dataset(fname, max_size=args.num_samples)

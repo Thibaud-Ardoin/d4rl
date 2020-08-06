@@ -36,7 +36,7 @@ import tensorflow.compat.v1 as tf
 from behavior_regularized_offline_rl.brac import agents
 from behavior_regularized_offline_rl.brac import utils
 
-import train_eval_offline
+import flow_evaluation_vis
 
 tf0.compat.v1.enable_v2_behavior()
 
@@ -102,7 +102,7 @@ def main(_):
   else:
       raise ValueError()
 
-  eval_results = train_eval_offline.train_eval_offline(
+  eval_results = flow_evaluation_vis.train_eval_offline(
       log_dir=log_dir,
       data_file=None,
       agent_module=agents.AGENT_MODULES_DICT[FLAGS.agent_name],

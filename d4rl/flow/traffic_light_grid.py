@@ -1,5 +1,5 @@
 """Traffic Light Grid example."""
-from flow.envs import TrafficLightGridBenchmarkEnv
+from flow.envs import TrafficLightGridTestEnv
 from flow.networks import TrafficLightGridNetwork
 from flow.core.params import SumoParams, EnvParams, InitialConfig, NetParams, \
     InFlows, SumoCarFollowingParams

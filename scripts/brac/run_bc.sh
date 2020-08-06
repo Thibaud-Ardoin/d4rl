@@ -14,7 +14,7 @@
 
 #!/bin/bash
 #ENV=walker2d-medium-v0
-ENV=flow-merge-random-v0
+ENV=flow-ring-random-v0 #flow-merge-random-v0
 
 python train_offline.py \
   --alsologtostderr --sub_dir=0 \
@@ -22,6 +22,7 @@ python train_offline.py \
   --agent_name=bc \
   --total_train_steps=300000 \
   --n_train=1000000 \
+
   --gin_bindings="train_eval_offline.model_params=((200, 200),)" \
   --gin_bindings="train_eval_offline.batch_size=256" \
   --gin_bindings="train_eval_offline.optimizers=(('adam', 5e-4),)"

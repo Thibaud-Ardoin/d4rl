@@ -17,11 +17,10 @@ ALPHA=0.1
 PLR=3e-04
 VALUE_PENALTY=True
 DIVERGENCE=kl
-ENV=flow-ring-random-v0 #pointmaze-small-noisy-v0
-DATA=train_bc #example
-#B_CKPT=$HOME/tmp/offlinerl/learn/$ENV/$DATA/n1000000/bc/0/0/agent_behavior
+ENV=flow-ring-random-v0
+DATA=train_bc
 B_CKPT=$HOME/tmp/offlinerl/learn/flow-ring-random-v0/train_bc/bc/0/0/agent_behavior
-python train_offline.py \
+python flow_eval.py \
   --alsologtostderr --sub_dir=auto \
   --env_name=$ENV \
   --agent_name=brac_primal \

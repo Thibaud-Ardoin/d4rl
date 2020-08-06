@@ -1,9 +1,9 @@
-import gym
-import os
-from d4rl import offline_env
-from gym.envs.registration import register
-
-from copy import deepcopy
+# import gym
+# import os
+# from d4rl import offline_env
+# from gym.envs.registration import register
+#
+# from copy import deepcopy
 
 import flow
 import flow.envs
@@ -23,9 +23,10 @@ from flow.utils.registry import make_create_env
 from flow.envs import WaveAttenuationPOEnv
 from flow.envs import BayBridgeEnv, TrafficLightGridPOEnv
 
-import d4rl.flow.traffic_light_grid as traffic_light_grid
-import d4rl.flow.merge as merge
-import d4rl.flow.bottleneck as bottleneck
+
+# import d4rl.flow.traffic_light_grid as traffic_light_grid
+# import d4rl.flow.merge as merge
+# import d4rl.flow.bottleneck as bottleneck
 
 def flow_register(flow_params, render=None, **kwargs):
     exp_tag = flow_params["exp_tag"]
@@ -68,6 +69,8 @@ def flow_register(flow_params, render=None, **kwargs):
     return env
 
 
+
+
 def ring_env(render='drgb'):
     name = "ring"
     network_name = RingNetwork
@@ -86,7 +89,7 @@ def ring_env(render='drgb'):
                  routing_controller=(ContinuousRouter, {}),
                  num_vehicles=1)
 
-    sim_params = SumoParams(sim_step=0.5, render=render, save_render=False)
+    sim_params = SumoParams(sim_step=0.5, render=render, save_render=True)
     HORIZON=100
     env_params = EnvParams(
         # length of one rollout
@@ -115,7 +118,6 @@ def ring_env(render='drgb'):
         initial=initial_config
     )
     return flow_params
-
 
 RING_RANDOM_SCORE = -165.22
 RING_EXPERT_SCORE = 24.42
@@ -150,7 +152,7 @@ register(
     entry_point='d4rl.flow:flow_register',
     max_episode_steps=500,
     kwargs={
-        'flow_params': ring_env(render=True),
+        'flow_params': ring_env(render=False),
         'dataset_url':'http://rail.eecs.berkeley.edu/datasets/offline_rl/flow/flow-ring-v0-random.hdf5',
         'ref_min_score': RING_RANDOM_SCORE,
         'ref_max_score': RING_EXPERT_SCORE

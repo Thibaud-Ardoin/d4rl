@@ -58,7 +58,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--noisy', action='store_true', help='Noisy actions')
     parser.add_argument('--maze', type=str, default='u-maze', help='Maze type. small or default')
-    parser.add_argument('--num_samples', type=int, default=int(1e6), help='Num samples to collect')
+    parser.add_argument('--num_samples', type=int, default=int(1e5), help='Num samples to collect')
     parser.add_argument('--env', type=str, default='Ant', help='Environment type')
     parser.add_argument('--policy_file', type=str, default='policy_file', help='file_name')
     parser.add_argument('--max_episode_steps', default=1000, type=int)
@@ -75,7 +75,7 @@ def main():
         maze = maze_env.HARDEST_MAZE
     else:
         raise NotImplementedError
-    
+
     import ipdb; ipdb.set_trace()
     if args.env == 'Ant':
         env = NormalizedBoxEnv(ant.AntMazeEnv(maze_map=maze, maze_size_scaling=4.0, non_zero_reset=args.multi_start))
@@ -83,7 +83,7 @@ def main():
         env = NormalizedBoxEnv(swimmer.SwimmerMazeEnv(mmaze_map=maze, maze_size_scaling=4.0, non_zero_reset=args.multi_start))
     else:
         raise NotImplementedError
-    
+
     env.set_target()
     s = env.reset()
     act = env.action_space.sample()
@@ -102,7 +102,7 @@ def main():
         goal_tuple = goal_tuple / np.linalg.norm(goal_tuple) * 10.0
 
         new_obs = np.concatenate([obs_new, goal_tuple], -1)
-        return policy.get_action(new_obs)[0], (goal_tuple[0] + obs[0], goal_tuple[1] + obs[1])      
+        return policy.get_action(new_obs)[0], (goal_tuple[0] + obs[0], goal_tuple[1] + obs[1])
 
     data = reset_data()
 
@@ -113,7 +113,7 @@ def main():
 
     if args.video:
         frames = []
-    
+
     ts = 0
     num_episodes = 0
     for _ in range(args.num_samples):
@@ -126,7 +126,7 @@ def main():
         ns, r, done, info = env.step(act)
         if ts >= args.max_episode_steps:
             done = True
-        
+
         append_data(data, s[:-2], act, r, env.target_goal, done, env.physics.data)
 
         if len(data['observations']) % 10000 == 0:
@@ -142,7 +142,7 @@ def main():
             if args.video:
                 frames = np.array(frames)
                 save_video('./videos/', args.env + '_navigation', frames, num_episodes)
-            
+
             num_episodes += 1
             frames = []
         else:
@@ -151,7 +151,7 @@ def main():
         if args.video:
             curr_frame = env.physics.render(width=500, height=500, depth=False)
             frames.append(curr_frame)
-    
+
     if args.noisy:
         fname = args.env + '_maze_%s_noisy_multistart_%s_multigoal_%s.hdf5' % (args.maze, str(args.multi_start), str(args.multigoal))
     else:

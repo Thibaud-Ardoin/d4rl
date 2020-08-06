@@ -100,7 +100,7 @@ def train_eval_offline(
     log_dir,
     data_file,
     agent_module,
-    env_name='HalfCheetah-v2',
+    env_name='flow-ring-random-v0',
     n_train=int(1e6),
     shuffle_steps=0,
     seed=0,
@@ -142,8 +142,8 @@ def train_eval_offline(
   full_data = get_offline_data(tf_env)
 
   # Split data.
-  n_train = min(n_train, full_data.size)
-  logging.info('n_train %s.', n_train)
+  # n_train = min(n_train, full_data.size)
+  # logging.info('n_train %s.', n_train)
   if use_seed_for_data:
     rand = np.random.RandomState(seed)
   else:
@@ -182,10 +182,10 @@ def train_eval_offline(
     agent.restore(agent_ckpt_name)
 
   # Train agent.
-  train_summary_dir = os.path.join(log_dir, 'train')
+  # train_summary_dir = os.path.join(log_dir, 'train')
   eval_summary_dir = os.path.join(log_dir, 'eval')
-  train_summary_writer = tf0.compat.v2.summary.create_file_writer(
-      train_summary_dir)
+  # train_summary_writer = tf0.compat.v2.summary.create_file_writer(
+      # train_summary_dir)
   eval_summary_writers = collections.OrderedDict()
   for policy_key in agent.test_policies.keys():
     eval_summary_writer = tf0.compat.v2.summary.create_file_writer(
@@ -198,32 +198,32 @@ def train_eval_offline(
   step = agent.global_step
   timed_at_step = step
   while step < total_train_steps:
-    agent.train_step()
+    # agent.train_step()
     step = agent.global_step
-    if step % summary_freq == 0 or step == total_train_steps:
-      agent.write_train_summary(train_summary_writer)
-    if step % print_freq == 0 or step == total_train_steps:
-      agent.print_train_info()
-    if step % eval_freq == 0 or step == total_train_steps:
-      time_ed = time.time()
-      time_cost = time_ed - time_st
-      logging.info(
-          'Training at %.4g steps/s.', (step - timed_at_step) / time_cost)
-      eval_result, eval_infos = train_eval_utils.eval_policies(
-          tf_env, agent.test_policies, n_eval_episodes)
-      eval_results.append([step] + eval_result)
-      logging.info('Testing at step %d:', step)
-      for policy_key, policy_info in eval_infos.items():
+    # if step % summary_freq == 0 or step == total_train_steps:
+      # agent.write_train_summary(train_summary_writer)
+    # if step % print_freq == 0 or step == total_train_steps:
+      # agent.print_train_info()
+    # if step % eval_freq == 0 or step == total_train_steps:
+    time_ed = time.time()
+    time_cost = time_ed - time_st
+    logging.info(
+      'Training at %.4g steps/s.', (step - timed_at_step) / time_cost)
+    eval_result, eval_infos = train_eval_utils.eval_policies(
+      tf_env, agent.test_policies, n_eval_episodes)
+    eval_results.append([step] + eval_result)
+    logging.info('Testing at step %d:', step)
+    for policy_key, policy_info in eval_infos.items():
         logging.info(utils.get_summary_str(
             step=None, info=policy_info, prefix=policy_key+': '))
-        utils.write_summary(eval_summary_writers[policy_key], step, policy_info)
-      time_st = time.time()
-      timed_at_step = step
-    if step % save_freq == 0:
-      agent.save(agent_ckpt_name)
-      logging.info('Agent saved at %s.', agent_ckpt_name)
+    # utils.write_summary(eval_summary_writers[policy_key], step, policy_info)
+    time_st = time.time()
+    timed_at_step = step
+# if step % save_freq == 0:
+#   agent.save(agent_ckpt_name)
+#   logging.info('Agent saved at %s.', agent_ckpt_name)
 
-  agent.save(agent_ckpt_name)
+  # agent.save(agent_ckpt_name)
   time_cost = time.time() - time_st_total
   logging.info('Training finished, time cost %.4gs.', time_cost)
   return np.array(eval_results)
