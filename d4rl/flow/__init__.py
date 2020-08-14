@@ -86,8 +86,8 @@ def ring_env(render='drgb'):
                  routing_controller=(ContinuousRouter, {}),
                  num_vehicles=1)
 
-    sim_params = SumoParams(sim_step=0.5, render=render, save_render=False)
-    HORIZON=100
+    sim_params = SumoParams(sim_step=0.1, render=render, save_render=False)
+    HORIZON=10000
     env_params = EnvParams(
         # length of one rollout
         horizon=HORIZON,
@@ -123,7 +123,7 @@ RING_EXPERT_SCORE = 24.42
 register(
     id='flow-ring-v0',
     entry_point='d4rl.flow:flow_register',
-    max_episode_steps=500,
+    max_episode_steps=5000,
     kwargs={
         'flow_params': ring_env(render=False),
         'dataset_url': None,
