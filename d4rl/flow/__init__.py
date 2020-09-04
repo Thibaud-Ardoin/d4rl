@@ -78,7 +78,7 @@ def ring_env(render='drgb'):
 
     vehicles = VehicleParams()
     vehicles.add("human",
-                 acceleration_controller=(IDMController, {'noise': 1}),
+                 acceleration_controller=(IDMController, {'noise': 0}),
                  routing_controller=(ContinuousRouter, {}),
                  num_vehicles=21)
     vehicles.add(veh_id="rl",
