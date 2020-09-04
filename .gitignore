@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 #Data
-data_generation/
+/scripts/data_generation/*
