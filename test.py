@@ -2,7 +2,7 @@ import gym
 import d4rl # Import required to register environments
 
 # Create the environment
-env = gym.make('flow-ring-random-v0')
+env = gym.make('flow-ring-noise-v0')
 
 # d4rl abides by the OpenAI gym interface
 env.reset()

@@ -68,7 +68,7 @@ def flow_register(flow_params, render=None, **kwargs):
     return env
 
 
-def ring_env(render='drgb'):
+def ring_env(noise=0, render='drgb'):
     name = "ring"
     network_name = RingNetwork
     env_name = WaveAttenuationPOEnv
@@ -78,7 +78,7 @@ def ring_env(render='drgb'):
 
     vehicles = VehicleParams()
     vehicles.add("human",
-                 acceleration_controller=(IDMController, {'noise': 1}),
+                 acceleration_controller=(IDMController, {'noise': noise}),
                  routing_controller=(ContinuousRouter, {}),
                  num_vehicles=21)
     vehicles.add(veh_id="rl",
@@ -119,6 +119,19 @@ def ring_env(render='drgb'):
 
 RING_RANDOM_SCORE = -165.22
 RING_EXPERT_SCORE = 24.42
+
+for noise in ['0.05', '0.1', '0.2', '0.5', '1', '2', '2.5', '5', '7.5', '10'] :
+    register(
+        id='flow-ring-noise%s-v0' % noise,
+        entry_point='d4rl.flow:flow_register',
+        max_episode_steps=5000,
+        kwargs={
+            'flow_params': ring_env(render=False, noise=float(noise)),
+            'dataset_url': None,
+            'ref_min_score': RING_RANDOM_SCORE,
+            'ref_max_score': RING_EXPERT_SCORE
+        }
+    )
 
 register(
     id='flow-ring-v0',
