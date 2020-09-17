@@ -87,7 +87,7 @@ def ring_env(noise=0, render='drgb'):
                  num_vehicles=1)
 
     sim_params = SumoParams(sim_step=0.1, render=render, save_render=False)
-    HORIZON=10000
+    HORIZON=1000
     env_params = EnvParams(
         # length of one rollout
         horizon=HORIZON,
